@@ -221,15 +221,41 @@ class Ui_MainWindow(object):
         self.loginButton.clicked.connect(self.loginui)
 
     def getsignupfields(self, username, password1, password2):
-        if(password1!=password2):
-            print('Passwords do not match.')
-            quit()
+        if password1!=password2:
+            self.signup_error_popup('pw')
+        elif username=='' or password1=='' or password2=='':
+            self.signup_error_popup('empty')
         else:
             if self.newportal.signup(username, password1):
                 self.loginui()
             else:
-                print('Username already exists.')
-                quit()
+                self.signup_error_popup('un')
+
+    def signup_error_popup(self, errortype):
+        msg=QMessageBox()
+        msg.setIcon(QMessageBox.Warning)
+        if errortype=='pw':
+            msg.setText('Passwords do not match!')
+            msg.setInformativeText('Both passwords should be the same. Please try again.')
+        elif errortype=='empty':
+            msg.setText('Incomplete Credentials!')
+            msg.setInformativeText('The fields entered cannot be empty. Please try again.')
+        else:
+            msg.setText('Username Taken!')
+            msg.setInformativeText('The username you entered is taken. Please try another.')
+        msg.setWindowTitle('Error')
+        msg.setStandardButtons(QMessageBox.Ok|QMessageBox.Cancel)
+        msg.setDefaultButton(QMessageBox.Ok)
+        msg.setEscapeButton(QMessageBox.Cancel)
+        msg.buttonClicked.connect(self.signup_error_popup_actions)
+
+        x=msg.exec_()
+
+    def signup_error_popup_actions(self, option):
+        if option.text()=='OK':
+            self.signupui()
+        else:
+            quit()
 
     def showstatus(self):
         self.clearLayout(self.centralwidget)
