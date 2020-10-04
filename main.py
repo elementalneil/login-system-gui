@@ -96,28 +96,36 @@ class Ui_MainWindow(object):
 
     def getloginfields(self, username, password):
         status=self.newportal.login(username, password)
+        if username=='' or password=='':
+            self.login_error_popup('empty')
         if(status==1):
-            self.login_username_popup()
+            self.login_error_popup('un')
         elif(status==2):
-            print('Wrong Password')
-            quit()
+            self.login_error_popup('pw')
         elif(status==3):
             self.showstatus()
 
-    def login_username_popup(self):
+    def login_error_popup(self, errortype):
         msg=QMessageBox()
         msg.setIcon(QMessageBox.Warning)
-        msg.setText('Wrong Username!')
-        msg.setInformativeText('The username entered does not exist. Please try again.')
+        if errortype=='empty':
+            msg.setText('Incomplete Credentials!')
+            msg.setInformativeText('The fields entered cannot be empty. Please try again.')
+        elif errortype=='un':
+            msg.setText('Wrong Username!')
+            msg.setInformativeText('The username entered does not exist. Please try again.')
+        else:
+            msg.setText('Wrong Password!')
+            msg.setInformativeText('The password does not match. Please try again.')
         msg.setWindowTitle('Error')
         msg.setStandardButtons(QMessageBox.Ok|QMessageBox.Cancel)
         msg.setDefaultButton(QMessageBox.Ok)
         msg.setEscapeButton(QMessageBox.Cancel)
-        msg.buttonClicked.connect(self.login_username_popup_actions)
+        msg.buttonClicked.connect(self.login_error_popup_actions)
 
         x=msg.exec_()
 
-    def login_username_popup_actions(self, option):
+    def login_error_popup_actions(self, option):
         if option.text()=='OK':
             self.loginui()
         else:
