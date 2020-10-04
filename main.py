@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMessageBox
 import db
 import sys
 
@@ -96,13 +97,31 @@ class Ui_MainWindow(object):
     def getloginfields(self, username, password):
         status=self.newportal.login(username, password)
         if(status==1):
-            print('Wrong Username')
-            quit()
+            self.login_username_popup()
         elif(status==2):
             print('Wrong Password')
             quit()
         elif(status==3):
             self.showstatus()
+
+    def login_username_popup(self):
+        msg=QMessageBox()
+        msg.setIcon(QMessageBox.Warning)
+        msg.setText('Wrong Username!')
+        msg.setInformativeText('The username entered does not exist. Please try again.')
+        msg.setWindowTitle('Error')
+        msg.setStandardButtons(QMessageBox.Ok|QMessageBox.Cancel)
+        msg.setDefaultButton(QMessageBox.Ok)
+        msg.setEscapeButton(QMessageBox.Cancel)
+        msg.buttonClicked.connect(self.login_username_popup_actions)
+
+        x=msg.exec_()
+
+    def login_username_popup_actions(self, option):
+        if option.text()=='OK':
+            self.loginui()
+        else:
+            quit()
 
     def signupui(self):
         self.clearLayout(self.centralwidget)
