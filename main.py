@@ -227,9 +227,28 @@ class Ui_MainWindow(object):
             self.signup_error_popup('empty')
         else:
             if self.newportal.signup(username, password1):
-                self.loginui()
+                self.signup_success_popup(username)
             else:
                 self.signup_error_popup('un')
+
+    def signup_success_popup(self, username):
+        msg=QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setText('Signup Successful!')
+        msg.setInformativeText('Welcome '+username+'. Your account is created. Please login to continue.')
+        msg.setWindowTitle('Success')
+        msg.setStandardButtons(QMessageBox.Ok|QMessageBox.Cancel)
+        msg.setDefaultButton(QMessageBox.Ok)
+        msg.setEscapeButton(QMessageBox.Cancel)
+        msg.buttonClicked.connect(self.signup_success_popup_actions)
+
+        x=msg.exec_()
+
+    def signup_success_popup_actions(self, option):
+        if option.text()=='OK':
+            self.loginui()
+        else:
+            quit()
 
     def signup_error_popup(self, errortype):
         msg=QMessageBox()
