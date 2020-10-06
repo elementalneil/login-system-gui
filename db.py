@@ -1,4 +1,5 @@
 import sqlite3
+import bcrypt
 
 class portal:
     def __init__(self):
@@ -15,16 +16,18 @@ class portal:
     def login(self, username, password):
         self.sql.execute('SELECT username, password FROM Accounts WHERE username=?',(username,))
         row=self.sql.fetchone()
+        password=bytes(password,'utf-8')
         if row==None:
             return 1
         else:
-            if row[1]==password:
-                print('Login Succesful')
+            if bcrypt.checkpw(password, row[1]):
                 return 3
             else:
                 return 2
 
     def signup(self, username, password):
+        password=bytes(password,'utf-8')
+        password=bcrypt.hashpw(password, bcrypt.gensalt(12))
         try:
             self.sql.execute('''
                 INSERT INTO Accounts(username, password) 
