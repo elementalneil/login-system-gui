@@ -103,7 +103,7 @@ class Ui_MainWindow(object):
         elif(status==2):
             self.login_error_popup('pw')
         elif(status==3):
-            self.showstatus()
+            self.showstatus(username)
 
     def login_error_popup(self, errortype):
         msg=QMessageBox()
@@ -276,7 +276,7 @@ class Ui_MainWindow(object):
         else:
             quit()
 
-    def showstatus(self):
+    def showstatus(self, username):
         self.clearLayout(self.centralwidget)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -285,7 +285,7 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label.setFont(font)
-        self.label.setText("Logged in succesfully...")
+        self.label.setText("You're logged in as "+username)
         MainWindow.setCentralWidget(self.centralwidget)
 
     def clearLayout(self, layout):
