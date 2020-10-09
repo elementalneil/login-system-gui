@@ -7,15 +7,16 @@ class Ui_MainWindow(object):
     def __init__(self):
         self.newportal = db.portal()
 
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(640, 480)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+    def setupUi(self):
+        self.MainWindow=QtWidgets.QMainWindow()
+        self.MainWindow.setObjectName("MainWindow")
+        self.MainWindow.resize(640, 480)
+        self.centralwidget = QtWidgets.QWidget(self.MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.loginui()
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.retranslateUi(self.MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(self.MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -23,7 +24,7 @@ class Ui_MainWindow(object):
 
     def loginui(self):
         self.clearLayout(self.centralwidget)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget = QtWidgets.QWidget(self.MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
         self.label = QtWidgets.QLabel(self.centralwidget)
@@ -82,7 +83,7 @@ class Ui_MainWindow(object):
         self.signupButton.setGeometry(QtCore.QRect(250, 380, 131, 31))
         self.signupButton.setObjectName("signupButton")
 
-        MainWindow.setCentralWidget(self.centralwidget)
+        self.MainWindow.setCentralWidget(self.centralwidget)
 
         _translate = QtCore.QCoreApplication.translate
         self.label.setText(_translate("MainWindow", "Log in to Your Account"))
@@ -98,7 +99,7 @@ class Ui_MainWindow(object):
         status=self.newportal.login(username, password)
         if username=='' or password=='':
             self.login_error_popup('empty')
-        if(status==1):
+        elif(status==1):
             self.login_error_popup('un')
         elif(status==2):
             self.login_error_popup('pw')
@@ -129,11 +130,11 @@ class Ui_MainWindow(object):
         if option.text()=='OK':
             self.loginui()
         else:
-            quit()
+            self.MainWindow.close()
 
     def signupui(self):
         self.clearLayout(self.centralwidget)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget = QtWidgets.QWidget(self.MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
         self.label = QtWidgets.QLabel(self.centralwidget)
@@ -207,7 +208,7 @@ class Ui_MainWindow(object):
         self.loginButton.setGeometry(QtCore.QRect(250, 410, 131, 31))
         self.loginButton.setObjectName("loginButton")
 
-        MainWindow.setCentralWidget(self.centralwidget)
+        self.MainWindow.setCentralWidget(self.centralwidget)
 
         _translate = QtCore.QCoreApplication.translate
         self.label.setText(_translate("MainWindow", "Create New Account"))
@@ -248,7 +249,7 @@ class Ui_MainWindow(object):
         if option.text()=='OK':
             self.loginui()
         else:
-            quit()
+            self.MainWindow.close()
 
     def signup_error_popup(self, errortype):
         msg=QMessageBox()
@@ -274,11 +275,11 @@ class Ui_MainWindow(object):
         if option.text()=='OK':
             self.signupui()
         else:
-            quit()
+            self.MainWindow.close()
 
     def showstatus(self, username):
         self.clearLayout(self.centralwidget)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget = QtWidgets.QWidget(self.MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(160, 40, 301, 41))
@@ -286,15 +287,15 @@ class Ui_MainWindow(object):
         font.setPointSize(12)
         self.label.setFont(font)
         self.label.setText("You're logged in as "+username)
-        MainWindow.setCentralWidget(self.centralwidget)
+        self.MainWindow.setCentralWidget(self.centralwidget)
 
     def clearLayout(self, layout):
         layout.deleteLater()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
+    # MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
+    ui.setupUi()
+    ui.MainWindow.show()
     sys.exit(app.exec_())
